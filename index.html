@@ -134,6 +134,7 @@ canvas{display:block;margin:auto;width:min(900px,96vw);height:auto;border:4px so
 <p>PLAYER</p><h2 id="ticketName"></h2>
 <p>QUIZ STARTPUNTEN: <b id="ticketQuiz"></b></p>
 <p>GAME SCORE: <b id="ticketGame"></b></p>
+<p>SNELHEIDSBONUS: <b id="ticketSpeed"></b></p>
 <p>TOTAAL: <b id="ticketTotal"></b></p>
 <div class="barcode" id="barcode"></div>
 <p class="small" style="text-align:center">KEEP THIS TICKET</p>
@@ -416,9 +417,12 @@ function winnerSound(){
 function endGame(){
  if(ended)return; ended=true; paused=true; stopMusic(); winnerSound();
  const elapsedSeconds=Math.max(0,(performance.now()-gameStartTime)/1000);
- const speedBonus=Math.max(0,Math.round(6000-(elapsedSeconds*60)));
+ // Hoe sneller alle balletjes én alle vragen zijn afgewerkt, hoe hoger de bonus.
+ // De bonus blijft positief en daalt continu naarmate het spel langer duurt.
+ const speedBonus=Math.max(1,Math.round(12000/(1+(elapsedSeconds/60))));
  gameScore+=speedBonus;
  document.getElementById("gameScore").textContent=gameScore;
+ document.getElementById("ticketSpeed").textContent=speedBonus;
  const total=quizScore+gameScore;
  document.getElementById("ticketName").textContent=playerName;
  document.getElementById("ticketQuiz").textContent=quizScore;
